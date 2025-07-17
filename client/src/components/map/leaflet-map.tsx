@@ -43,8 +43,8 @@ export function LeafletMap({
     if (!mapContainerRef.current || mapRef.current) return;
 
     mapRef.current = L.map(mapContainerRef.current, {
-      center: [25.2048, 55.2708], // Dubai coordinates
-      zoom: 10,
+      center: [20, 0], // Global center
+      zoom: 3,
       zoomControl: false,
     });
 
@@ -78,23 +78,48 @@ export function LeafletMap({
       const isSelected = selectedVessel?.id === vessel.id;
       const isUnderway = vessel.status === 'Under Way';
       
+      // Create arrow-shaped marker showing vessel heading
+      const heading = vessel.course || 0; // Use course for heading direction
+      const markerColor = isUnderway ? '#1565C0' : '#FF7043';
+      
       const icon = L.divIcon({
         html: `
-          <div class="vessel-marker ${isSelected ? 'ring-2 ring-white' : ''}" 
+          <div class="vessel-arrow-marker" 
                style="
-                 background: ${isUnderway ? '#1565C0' : '#FF7043'};
-                 border: 2px solid #ffffff;
-                 border-radius: 50%;
-                 width: 12px;
-                 height: 12px;
-                 box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-                 ${isSelected ? 'transform: scale(1.2);' : ''}
+                 transform: rotate(${heading}deg) ${isSelected ? 'scale(1.3)' : 'scale(1.0)'};
+                 width: 20px;
+                 height: 20px;
+                 position: relative;
                ">
+            <div style="
+              width: 0;
+              height: 0;
+              border-left: 8px solid transparent;
+              border-right: 8px solid transparent;
+              border-bottom: 16px solid ${markerColor};
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+              filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+              ${isSelected ? 'border-bottom-color: #FF6B35;' : ''}
+            "></div>
+            <div style="
+              width: 6px;
+              height: 6px;
+              background: white;
+              border-radius: 50%;
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+              z-index: 1;
+            "></div>
           </div>
         `,
         className: 'vessel-marker-container',
-        iconSize: [12, 12],
-        iconAnchor: [6, 6],
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
       });
 
       const marker = L.marker([vessel.latitude, vessel.longitude], { icon });

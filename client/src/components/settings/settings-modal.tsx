@@ -6,6 +6,7 @@ import { Switch } from '../ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Settings, Save, RotateCcw } from 'lucide-react';
 import { MapSettings } from '../../types/vessel';
+import { useTheme } from '../theme-provider';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export function SettingsModal({
   onSettingsChange 
 }: SettingsModalProps) {
   const [localSettings, setLocalSettings] = useState<MapSettings>(settings);
+  const { theme, setTheme } = useTheme();
 
   const handleSave = () => {
     onSettingsChange(localSettings);
@@ -68,8 +70,8 @@ export function SettingsModal({
                 </Label>
                 <Switch
                   id="dark-mode"
-                  checked={localSettings.darkMode}
-                  onCheckedChange={(checked) => updateSetting('darkMode', checked)}
+                  checked={theme === 'dark'}
+                  onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
                 />
               </div>
 

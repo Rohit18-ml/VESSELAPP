@@ -16,6 +16,7 @@ export interface VesselData {
   status: string;
   speed: number;
   heading?: number;
+  course?: number;
   latitude: number;
   longitude: number;
   destination?: string;

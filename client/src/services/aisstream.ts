@@ -64,10 +64,10 @@ export class AISStreamService {
     const subscribeMessage = {
       APIKey: this.apiKey,
       BoundingBoxes: [
-        // Arabian Gulf region
+        // Global coverage - major shipping routes
         [
-          [24.0, 54.0], // Southwest corner
-          [27.0, 57.0]  // Northeast corner
+          [-90, -180], // Southwest corner (global)
+          [90, 180]    // Northeast corner (global)
         ]
       ],
       FiltersShipAndCargo: ['1', '2', '3', '4', '5', '6', '7', '8', '9'], // All vessel types

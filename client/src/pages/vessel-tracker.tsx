@@ -46,8 +46,9 @@ export default function VesselTracker() {
   // WebSocket connection
   const { isConnected, onMessage } = useWebSocket('/ws');
 
-  // Data fetching
-  const { data: allVessels = [], isLoading: vesselsLoading, refetch } = useVessels();
+  // Data fetching with auto-refresh
+  const refreshInterval = settings.autoRefresh ? settings.refreshInterval * 1000 : 0;
+  const { data: allVessels = [], isLoading: vesselsLoading, refetch } = useVessels(refreshInterval);
   const { data: searchResults = [] } = useSearchVessels(filters.searchQuery);
   const { data: filteredVessels = [] } = useFilterVessels({
     type: filters.type,

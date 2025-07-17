@@ -2,10 +2,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { VesselData, VesselFilters } from '../types/vessel';
 import { apiRequest } from '../lib/queryClient';
 
-export function useVessels() {
+export function useVessels(refetchInterval: number = 10000) {
   return useQuery<VesselData[]>({
     queryKey: ['/api/vessels'],
     staleTime: 30000, // 30 seconds
+    refetchInterval: refetchInterval, // Auto-refresh interval
   });
 }
 

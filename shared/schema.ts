@@ -14,6 +14,7 @@ export const vessels = pgTable("vessels", {
   status: text("status").notNull(),
   speed: real("speed").notNull(),
   heading: real("heading"),
+  course: real("course"),
   latitude: real("latitude").notNull(),
   longitude: real("longitude").notNull(),
   destination: text("destination"),
