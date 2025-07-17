@@ -88,7 +88,7 @@ export function VesselDetailModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto z-[10000]">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Ship className="h-5 w-5" />
