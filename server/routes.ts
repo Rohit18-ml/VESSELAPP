@@ -4,6 +4,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { insertVesselSchema, insertGeofenceSchema, insertAlertSchema } from "@shared/schema";
 import { z } from "zod";
+import { AISStreamService } from "./aisstream-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -39,6 +40,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   };
 
+  // Initialize AIS Stream service
+  const aisStreamApiKey = process.env.VITE_AISSTREAM_API_KEY;
+  let aisStreamService: AISStreamService | null = null;
+  
+  if (aisStreamApiKey) {
+    aisStreamService = new AISStreamService(aisStreamApiKey);
+    aisStreamService.setBroadcastCallback(broadcast);
+    
+    // Start AIS stream connection
+    aisStreamService.connect().catch((error) => {
+      console.error('Failed to connect to AISstream:', error);
+    });
+  } else {
+    console.warn('AISstream API key not found, using sample data only');
+  }
+
   // Vessel routes
   app.get('/api/vessels', async (req, res) => {
     try {
@@ -46,6 +63,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(vessels);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch vessels' });
+    }
+  });
+
+  app.get('/api/vessels/:id/trail', async (req, res) => {
+    try {
+      const vesselId = parseInt(req.params.id);
+      const trail = await storage.getVesselTrail(vesselId);
+      res.json(trail);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch vessel trail' });
     }
   });
 

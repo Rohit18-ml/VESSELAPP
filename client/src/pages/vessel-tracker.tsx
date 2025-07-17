@@ -49,6 +49,7 @@ export default function VesselTracker() {
   // Data fetching with auto-refresh
   const refreshInterval = settings.autoRefresh ? settings.refreshInterval * 1000 : 0;
   const { data: allVessels = [], isLoading: vesselsLoading, refetch } = useVessels(refreshInterval);
+  
   const { data: searchResults = [] } = useSearchVessels(filters.searchQuery);
   const { data: filteredVessels = [] } = useFilterVessels({
     type: filters.type,
@@ -62,6 +63,28 @@ export default function VesselTracker() {
     : (filters.type || filters.status) 
       ? filteredVessels 
       : allVessels;
+
+  // Fetch vessel trails for displayed vessels
+  const [vesselTrails, setVesselTrails] = useState<{ [vesselId: number]: any[] }>({});
+  
+  useEffect(() => {
+    if (settings.showTrails && displayVessels.length > 0) {
+      displayVessels.forEach(async (vessel) => {
+        try {
+          const response = await fetch(`/api/vessels/${vessel.id}/trail`);
+          if (response.ok) {
+            const trail = await response.json();
+            setVesselTrails(prev => ({
+              ...prev,
+              [vessel.id]: trail
+            }));
+          }
+        } catch (error) {
+          console.error('Error fetching vessel trail:', error);
+        }
+      });
+    }
+  }, [displayVessels, settings.showTrails]);
 
   // Handle WebSocket messages
   useEffect(() => {
@@ -258,6 +281,7 @@ export default function VesselTracker() {
             onVesselSelect={handleVesselSelect}
             showTrails={settings.showTrails}
             showGeofences={settings.showGeofences}
+            vesselTrails={vesselTrails}
             className="h-[calc(100vh-64px)]"
           />
 

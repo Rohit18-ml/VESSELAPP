@@ -179,25 +179,23 @@ export function LeafletMap({
     currentTrails.clear();
 
     // Add new trails
-    Object.entries(vesselTrails).forEach(([vesselId, trail]) => {
-      if (trail.length < 2) return;
+    vessels.forEach((vessel) => {
+      if (vesselTrails[vessel.id] && vesselTrails[vessel.id].length > 1) {
+        const trail = vesselTrails[vessel.id];
+        const coordinates: [number, number][] = trail.map(point => [point.latitude, point.longitude]);
+        
+        const polyline = L.polyline(coordinates, {
+          color: vessel.status === 'Under Way' ? '#1565C0' : '#FF7043',
+          weight: 2,
+          opacity: 0.7,
+          dashArray: '5, 5'
+        });
 
-      const points: [number, number][] = trail.map((point) => [
-        point.latitude,
-        point.longitude,
-      ]);
-
-      const polyline = L.polyline(points, {
-        color: '#1565C0',
-        weight: 2,
-        opacity: 0.7,
-        dashArray: '5, 5',
-      });
-
-      polyline.addTo(map);
-      currentTrails.set(parseInt(vesselId), polyline);
+        polyline.addTo(map);
+        currentTrails.set(vessel.id, polyline);
+      }
     });
-  }, [vesselTrails, showTrails]);
+  }, [vessels, vesselTrails, showTrails]);
 
   // Update geofences
   useEffect(() => {
