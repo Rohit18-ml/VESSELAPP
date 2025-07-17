@@ -44,7 +44,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   };
 
   // Initialize AIS Stream service
-  const aisStreamApiKey = process.env.VITE_AISSTREAM_API_KEY;
+  const aisStreamApiKey = process.env.AISSTREAM_API_KEY;
   let aisStreamService: AISStreamService | null = null;
   
   if (aisStreamApiKey) {

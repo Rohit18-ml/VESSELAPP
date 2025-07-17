@@ -1,23 +1,23 @@
 {
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
-    "incremental": true,
-    "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
-    "noEmit": true,
+    "target": "ESNext",
     "module": "ESNext",
+    "moduleResolution": "bundler", // Changed to align with Vite
+    "jsx": "react-jsx",
     "strict": true,
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "preserve",
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "allowImportingTsExtensions": true,
-    "moduleResolution": "bundler",
+    "noEmit": true,
+    "types": ["vite/client", "node"],
+    "allowImportingTsExtensions": true, // Allow .ts/.tsx imports
     "baseUrl": ".",
-    "types": ["node", "vite/client"],
     "paths": {
-      "@/*": ["./client/src/*"],
-      "@shared/*": ["./shared/*"]
+      "@/*": ["client/src/*"],
+      "@server/*": ["server/*"],
+      "@shared/*": ["shared/*"]
     }
-  }
+  },
+  "include": ["client/src/**/*", "server/**/*", "shared/**/*"], // More specific
+  "exclude": ["node_modules", "dist", "migrations", "**/*.test.ts"]
 }
