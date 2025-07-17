@@ -25,12 +25,17 @@ Preferred communication style: Simple, everyday language.
 - **Real-time Communication**: WebSocket server for live updates
 - **Storage**: In-memory storage implementation with interface for easy database migration
 - **API Design**: RESTful endpoints with WebSocket enhancements
+- **Microservices**: Modular service architecture for ETA prediction, geofencing, and historical analysis
+- **External Integration**: AISstream API for real-time vessel data
+- **Analytics Engine**: Advanced performance metrics and route optimization algorithms
 
 ### Database Schema
-- **Vessels**: Core vessel information (IMO, MMSI, position, status, risk assessment)
-- **Vessel Trail**: Historical position tracking for route visualization
-- **Geofences**: Defined maritime zones with radius-based boundaries
-- **Alerts**: Vessel-specific notifications and warnings
+- **Vessels**: Core vessel information (IMO, MMSI, position, status, risk assessment, course data)
+- **Vessel Trail**: Historical position tracking for route visualization with speed and heading data
+- **Geofences**: Defined maritime zones with radius-based boundaries and type classification
+- **Alerts**: Multi-level vessel notifications with geofence integration
+- **Performance Metrics**: Historical vessel performance data and analytics
+- **ETA Predictions**: Cached arrival predictions with confidence scoring
 
 ## Key Components
 
@@ -113,12 +118,38 @@ Preferred communication style: Simple, everyday language.
 - **WebSocket**: Real-time communication layer
 
 ### Key Features
-- **Real-time Tracking**: Live vessel position updates
-- **Risk Assessment**: Automated vessel risk evaluation
-- **Geofencing**: Maritime zone monitoring
-- **Historical Data**: Vessel trail visualization
-- **Alert System**: Configurable notifications
-- **Export Functionality**: Data export capabilities
-- **Mobile Responsive**: Cross-device compatibility
+- **Real-time Tracking**: Live vessel position updates with AIS data integration
+- **Historical Tracking**: Comprehensive vessel movement analysis with port visits and route efficiency
+- **ETA Predictions**: Advanced arrival time predictions with weather impact analysis
+- **Geofencing**: Maritime zone monitoring with automated alerts and violation detection
+- **Risk Assessment**: Automated vessel risk evaluation with real-time updates
+- **Performance Analytics**: Fuel efficiency, route adherence, and operational metrics
+- **Route Optimization**: AI-powered route suggestions for improved efficiency
+- **Alert System**: Multi-level notifications for geofence violations and risk events
+- **Export Functionality**: Data export capabilities for all vessel metrics
+- **Mobile Responsive**: Cross-device compatibility with enhanced UI
 
-The system is designed for scalability with clear separation between client and server logic, making it easy to extend with additional features like advanced analytics, compliance reporting, or integration with other maritime systems.
+## Recent Updates (January 2025)
+
+### Major Features Implemented
+- **Advanced ETA Prediction Service**: Machine learning-based arrival time predictions with weather impact analysis
+- **Comprehensive Geofencing System**: Multi-zone monitoring with automated alert generation
+- **Historical Tracking Analytics**: Route efficiency analysis, port visit tracking, and performance metrics
+- **Enhanced Vessel Detail Modal**: Tabbed interface with ETA, history, performance, and analytics views
+- **Performance Metrics Dashboard**: Fuel efficiency, route adherence, and operational KPIs
+- **Route Optimization Engine**: AI-powered route suggestions for improved efficiency
+
+### Technical Improvements
+- **Service-Oriented Architecture**: Modular services for ETA prediction, geofencing, and historical analysis
+- **Enhanced AIS Integration**: Real-time vessel data processing with geofence violation detection
+- **Advanced Analytics Engine**: Performance metrics calculation and route optimization algorithms
+- **Improved UI Components**: Enhanced vessel detail modal with comprehensive analytics
+
+### API Enhancements
+- **ETA Endpoints**: `/api/vessels/:id/eta` and `/api/eta/all` for arrival predictions
+- **Historical Data**: `/api/vessels/:id/history` for movement analysis
+- **Performance Metrics**: `/api/vessels/:id/performance` for operational data
+- **Route Optimization**: `/api/vessels/:id/route-optimization` for efficiency suggestions
+- **Geofence Alerts**: `/api/geofences/alerts` for violation monitoring
+
+The system is designed for scalability with clear separation between client and server logic, making it easy to extend with additional features like advanced analytics, compliance reporting, or integration with other maritime systems. The new microservices architecture enables independent scaling of analytics and prediction services.

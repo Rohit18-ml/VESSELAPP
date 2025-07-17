@@ -5,6 +5,9 @@ import { storage } from "./storage";
 import { insertVesselSchema, insertGeofenceSchema, insertAlertSchema } from "@shared/schema";
 import { z } from "zod";
 import { AISStreamService } from "./aisstream-service";
+import { etaPredictionService } from "./eta-prediction-service";
+import { geofencingService } from "./geofencing-service";
+import { historicalTrackingService } from "./historical-tracking-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -56,6 +59,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.warn('AISstream API key not found, using sample data only');
   }
 
+  // Initialize other services
+  geofencingService.setBroadcastCallback(broadcast);
+
   // Vessel routes
   app.get('/api/vessels', async (req, res) => {
     try {
@@ -73,6 +79,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(trail);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch vessel trail' });
+    }
+  });
+
+  app.get('/api/vessels/:id/eta', async (req, res) => {
+    try {
+      const vesselId = parseInt(req.params.id);
+      const eta = await etaPredictionService.predictETA(vesselId);
+      if (!eta) {
+        return res.status(404).json({ error: 'ETA prediction not available' });
+      }
+      res.json(eta);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to predict ETA' });
+    }
+  });
+
+  app.get('/api/vessels/:id/history', async (req, res) => {
+    try {
+      const vesselId = parseInt(req.params.id);
+      const days = parseInt(req.query.days as string) || 30;
+      const history = await historicalTrackingService.analyzeVesselHistory(vesselId, days);
+      if (!history) {
+        return res.status(404).json({ error: 'Historical data not available' });
+      }
+      res.json(history);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch vessel history' });
+    }
+  });
+
+  app.get('/api/vessels/:id/performance', async (req, res) => {
+    try {
+      const vesselId = parseInt(req.params.id);
+      const performance = await historicalTrackingService.getVesselPerformanceMetrics(vesselId);
+      if (!performance) {
+        return res.status(404).json({ error: 'Performance metrics not available' });
+      }
+      res.json(performance);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch performance metrics' });
+    }
+  });
+
+  app.get('/api/vessels/:id/route-optimization', async (req, res) => {
+    try {
+      const vesselId = parseInt(req.params.id);
+      const optimization = await historicalTrackingService.generateRouteOptimization(vesselId);
+      if (!optimization) {
+        return res.status(404).json({ error: 'Route optimization not available' });
+      }
+      res.json(optimization);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to generate route optimization' });
     }
   });
 
@@ -188,6 +247,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ETA prediction routes
+  app.get('/api/eta/all', async (req, res) => {
+    try {
+      const predictions = await etaPredictionService.getAllETAPredictions();
+      res.json(predictions);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch ETA predictions' });
+    }
+  });
+
   // Geofence routes
   app.get('/api/geofences', async (req, res) => {
     try {
@@ -195,6 +264,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(geofences);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch geofences' });
+    }
+  });
+
+  app.get('/api/geofences/alerts', async (req, res) => {
+    try {
+      const alerts = await geofencingService.getActiveAlerts();
+      res.json(alerts);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch geofence alerts' });
     }
   });
 

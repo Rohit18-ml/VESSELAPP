@@ -190,12 +190,20 @@ export class AISStreamService {
           heading: vesselData.heading || null
         });
 
+        // Check for geofence violations
+        const { geofencingService } = await import('./geofencing-service');
+        await geofencingService.processVesselUpdate(vessel);
+
         // Broadcast update
         if (this.broadcastCallback) {
           this.broadcastCallback({ type: 'vessel_updated', vessel });
         }
       } else {
         vessel = await storage.createVessel(vesselInsertData);
+        
+        // Check for geofence violations
+        const { geofencingService } = await import('./geofencing-service');
+        await geofencingService.processVesselUpdate(vessel);
         
         // Broadcast new vessel
         if (this.broadcastCallback) {
