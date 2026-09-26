@@ -1,6 +1,6 @@
 # 🚢 Vessel Tracker Web App - Rohit Kujur
 
-This project implements a maritime tracking platform for the DP World Coding Challenge, inspired by systems like MarineTraffic. Built with `React`, `Vite`, `Express`, and `PostgreSQL`, it displays vessel positions on an interactive map, provides detailed vessel information, and supports filtering by vessel type. It uses `Drizzle ORM` for database management, `Zod` for data validation, and `Leaflet` for mapping, with sample data fallback when no AISstream.io key is provided. 🌍
+This project implements a maritime tracking platform inspired by systems like MarineTraffic. Built with `React`, `Vite`, `Express`, and `PostgreSQL`, it displays vessel positions on an interactive map, provides detailed vessel information, and supports filtering by vessel type. It uses `Drizzle ORM` for database management, `Zod` for data validation, and `Leaflet` for mapping, with sample data fallback when no AISstream.io key is provided. 🌍
 
 ---
 
